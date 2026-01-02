@@ -1,6 +1,8 @@
 services:
   web:
     build: .
+    depends_on:
+      - test
     ports:
       - "5000:5000"
     healthcheck:
@@ -11,11 +13,7 @@ services:
       start_period: 40s
     restart: unless-stopped
 
-  tests:
+  test:
     build:
       context: .
       dockerfile: Dockerfile.test
-    depends_on:
-      - web
-    environment:
-      - API_URL=http://web:5000
