@@ -1,0 +1,10 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt requirements-test.txt ./
+RUN pip3 install -r requirements.txt -r requirements-test.txt
+
+COPY . .
+
+CMD ["pytest", "tests/", "-v", "--cov=src", "--cov-report=term-missing", "--cov-report=xml"]
