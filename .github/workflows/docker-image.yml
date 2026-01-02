@@ -14,9 +14,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-     
-    - name: Navigate to app directory
-      run: cd my-app
-         
+        
     - name: Build the Docker image
       run: docker build ./my-app --file Dockerfile --tag my-image-name:$(date +%s)
