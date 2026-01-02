@@ -1,0 +1,52 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    
+    - uses: actions/checkout@v4
+    
+    - name: Build the test Docker image
+      run: cd my-app && docker build . --file Dockerfile.test --tag my-app-test:latest
+      
+    - name: Run tests in container (Ключевой шаг!)
+      run: cd my-app && docker run --name test-runner my-app-test:latest
+    
+    - name: Copy coverage report from container
+      run: |
+        # Копируем отчеты из контейнера на хост
+        docker cp test-runner:/app/coverage.xml ./coverage.xml 2>/dev/null || echo "coverage.xml not found"
+        docker cp test-runner:/app/.coverage ./.coverage 2>/dev/null || echo ".coverage not found"
+    
+    - name: Cleanup test container
+      run: docker rm test-runner 2>/dev/null || true
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        fail_ci_if_error: false
+        
+    - name: Upload test results as artifact (Рекомендуется)
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-reports-${{ github.run_id }}
+        path: |
+          coverage.xml
+          .coverage
+        retention-days: 7
+  
+  build:
+    runs-on: ubuntu-latest
+    needs: test  # Теперь сборка зависит от успеха тестов
+    steps:
+    - uses: actions/checkout@v4        
+    - name: Build the Docker image
+      run: cd my-app && docker build . --file Dockerfile --tag my-app:latest
