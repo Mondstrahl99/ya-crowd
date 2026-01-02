@@ -10,9 +10,17 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+    
     - uses: actions/checkout@v4        
     - name: Build the Docker image
       run: cd my-app && docker build . --file Dockerfile.test
+      
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        fail_ci_if_error: false        
+        
   build:
     runs-on: ubuntu-latest
     steps:
