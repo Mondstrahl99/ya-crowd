@@ -7,13 +7,15 @@ on:
     branches: [ "main" ]
 
 jobs:
-
-  build:
-
+  test:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
-        
+    - uses: actions/checkout@v4        
     - name: Build the Docker image
-      run: cd my-app && docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      run: cd my-app && docker build . --file Dockerfile.test
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4        
+    - name: Build the Docker image
+      run: cd my-app && docker build . --file Dockerfile
