@@ -61,4 +61,4 @@ jobs:
           curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
             -d "chat_id=${{ secrets.TELEGRAM_USER_ID }}" \
             -d "text=$EMOJI *CI/CD ЗАВЕРШЕН*%0A%0A📦 *Репозиторий:* ${{ github.repository }}%0A✏️ *Коммит:* ${{ github.event.head_commit.message }}%0A🔗 *Хеш:* \`${{ github.sha }}\`%0A🧪 *Тесты:* ${{ needs.test.result }}%0A🐳 *Сборка:* ${{ needs.build.result }}%0A%0A$STATUS" \
-            -d "parse_mode=MarkdownV2"
+          
