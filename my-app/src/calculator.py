@@ -8,7 +8,7 @@ class Calculator:
     
     def add(self, a: float, b: float) -> float:
         """Сложение двух чисел."""
-        result = a * b
+        result = a + b
         logger.info(f"Сложение: {a} + {b} = {result}")
         return result
     
